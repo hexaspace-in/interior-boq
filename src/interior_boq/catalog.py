@@ -11,6 +11,17 @@ UNITS = {"sqft": "sq ft", "rft": "running ft", "nos": "nos", "set": "set", "lot"
 ROOMS = ["Whole home", "Foyer", "Living", "Dining", "Kitchen", "Master bedroom", "Bedroom 2", "Bedroom 3",
          "Kids room", "Guest room", "Puja", "Study", "Bathrooms", "Balcony", "Utility"]
 DEFAULT_GST = 18.0
+SQM_PER_SQFT = 0.09290304  # exact: 1 ft = 0.3048 m
+
+
+def sqft_to_sqm(qty: float) -> float:
+    """Square feet to square metres, e.g. sqft_to_sqm(100) -> 9.290304. Not rounded."""
+    return float(qty) * SQM_PER_SQFT
+
+
+def sqm_to_sqft(qty: float) -> float:
+    """Square metres to square feet, e.g. sqm_to_sqft(10) -> 107.639... Not rounded."""
+    return float(qty) / SQM_PER_SQFT
 
 
 def line_code(category: str, n: int) -> str:

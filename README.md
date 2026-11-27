@@ -10,6 +10,7 @@ Bill of quantities (BOQ) and quote maths for home-interior projects. It's India-
 - **Fingerprint** of an approved BOQ, so you can tell if anything changed after sign-off
 - **Quote totals**: discount taken on the value before GST, then GST recalculated, with an optional cap for % coupons
 - Standard **categories** (civil, carpentry, electrical, plumbing and more), **units** (sq ft, running ft, nos…) and **rooms**
+- **Area units**: `sqft_to_sqm()` / `sqm_to_sqft()`, and totals report the area of sq ft and sq m lines in both units (`area_sqft`, `area_sqm`)
 
 Built from the BOQ engine Hexaspace uses on real projects. **No prices are included**: bring your own rates.
 

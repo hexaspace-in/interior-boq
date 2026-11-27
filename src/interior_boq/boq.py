@@ -14,7 +14,7 @@ import hashlib
 import json
 from typing import Dict, List, Optional
 
-from .catalog import DEFAULT_GST
+from .catalog import DEFAULT_GST, sqft_to_sqm, sqm_to_sqft
 
 Choices = Dict[str, str]  # option_group -> chosen line id
 
@@ -54,7 +54,9 @@ def is_supplier_line(line: dict) -> bool:
 
 
 def totals(lines: List[dict], with_cost: bool = False, choices: Optional[Choices] = None) -> dict:
-    """Totals of supplier lines; client-bought lines are reported apart as an estimate."""
+    """Totals of supplier lines; client-bought lines are reported apart as an estimate.
+
+    area_sqft / area_sqm: total qty of supplier lines measured in sq ft or sq m, in both units."""
     everything = counted(lines, choices)
     live = [l for l in everything if is_supplier_line(l)]
     theirs = [l for l in everything if not is_supplier_line(l)]
@@ -78,6 +80,10 @@ def totals(lines: List[dict], with_cost: bool = False, choices: Optional[Choices
         room, cat = l.get("room") or "Whole home", l.get("category") or "other"
         t["by_room"][room] = round(t["by_room"].get(room, 0) + a)
         t["by_category"][cat] = round(t["by_category"].get(cat, 0) + a)
+    sqft = sum(float(l.get("qty") or 0) for l in live if l.get("unit") == "sqft")
+    sqm = sum(float(l.get("qty") or 0) for l in live if l.get("unit") == "sqm")
+    t["area_sqft"] = round(sqft + sqm_to_sqft(sqm), 2)
+    t["area_sqm"] = round(sqm + sqft_to_sqm(sqft), 2)
     t["client_amount"] = round(sum(amounts(l)["amount"] for l in theirs))
     t["client_lines"] = len(theirs)
     if with_cost:
